@@ -1,0 +1,1 @@
+#define STRINGIFY0(v) #v
