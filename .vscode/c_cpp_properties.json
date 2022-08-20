@@ -3,14 +3,16 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/app/srcinc",
                 "${workspaceFolder}/app/vendor/imgui",
                 "${workspaceFolder}/app/vendor/glad/include",
+                "${workspaceFolder}/app/vendor/glfw/",
                 "${workspaceFolder}/app/vendor/imgui",
                 "${workspaceFolder}/app/vendor/imgui/backends",
-                "${workspaceFolder}/app/vendor"
+                "${workspaceFolder}/app/vendor",
+                "${workspaceFolder}/app/vendor/other"
             ],
-            "intelliSenseMode": "windows-msvc-x64",
+            "intelliSenseMode": "windows-gcc-x64",
             "cStandard": "c17",
             "cppStandard": "c++17"
         }

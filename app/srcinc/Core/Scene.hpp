@@ -82,6 +82,8 @@ public:
     template<typename T>
     T* AddComponent(Entity entity);
 
+    Component* AddComponent(Entity entity, CompID cid);
+
     template<typename T>
     void RemoveComponent(Entity entity);
     template<typename T>

@@ -87,6 +87,19 @@ T* Scene::AddComponent(Entity entity)
     return nullptr;
 }
 
+Component* Scene::AddComponent(Entity entity, CompID cid)
+{
+    if(IsEntityAssigned(entity))
+    {
+        Component* comp = Component::instantiate(cid);
+        entityComponents[entity.id].push_back(comp);
+        if(comp->IsActiveComponent())
+            activeComponents.emplace((ActiveComponent*)comp);
+        return comp;
+    }
+    return nullptr;
+}
+
 
 template<typename T>
 void Scene::RemoveComponent(Entity entity)
@@ -253,12 +266,14 @@ Entity Scene::CreateEntity(std::string name)
 {
     Entity e = CreateEntity();
     SetEntityName(e, name);
+    return e;
 }
 
 Entity Scene::CreateEntity(std::string name, Entity parent)
 {
     Entity e = CreateEntity(name);
     SetParent(parent, e);
+    return e;
 }
 
 Entity Scene::CreateEntity(Entity parent)

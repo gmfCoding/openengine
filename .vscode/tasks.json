@@ -7,7 +7,7 @@
             "command": "cmake",
             "args": [
                 {
-                    "value": "-B build -G \"MinGW Makefiles\"",
+                    "value": "-B build -G \"MinGW Makefiles\" -DCMAKE_CXX_STANDARD=17",
                     "quoting": "escape"
                 }
             ],
@@ -19,7 +19,7 @@
             "command": "cmake",
             "args": [
                 {
-                    "value": "-B build -G \"MinGW Makefiles\" -DCMAKE_BUILD_TYPE=Debug",
+                    "value": "-B build -G \"MinGW Makefiles\" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=17",
                     "quoting": "escape"
                 }
             ],

@@ -7,10 +7,8 @@
 RegisterComponent(dragMe(nullptr), data("Hello, World!"))
 
 BeginProperties(),
-SProperty2(dragMe, TestComponent),
+SProperty2(dragMe, TestComponent*),
 SProperty2(data, std::string)
 EndProperties();
-
-
 
 #include "CompGenClear.hpp"

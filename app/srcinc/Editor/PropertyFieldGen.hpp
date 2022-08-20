@@ -1,0 +1,1 @@
+#define RegisterProperty(type, __VARARGS__ ...)

@@ -49,7 +49,7 @@ class Component
     
     static void registrate(std::string const & name, ComponentInfo* ci);
 
-    static Component* instantiate(std::string const & name);
+    static Component* instantiate(CompID name);
 
     template <typename D>
     struct Registrar
@@ -67,7 +67,7 @@ class Component
     };
 
     public:
-    static std::unordered_map<std::string, ComponentInfo*> & registry();
+    static std::unordered_map<CompID, ComponentInfo*> & registry();
 };
 
 

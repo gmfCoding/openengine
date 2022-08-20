@@ -23,6 +23,13 @@ add_subdirectory(app/src)
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
+
+target_precompile_headers(${CMAKE_PROJECT_NAME}
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/app/srcinc/pch/std.hpp
+    ${PROJECT_SOURCE_DIR}/app/srcinc/pch/gl.hpp
+)
+
 target_include_directories(${CMAKE_PROJECT_NAME}
     PRIVATE 
         ${PROJECT_SOURCE_DIR}/app/srcinc
@@ -31,6 +38,7 @@ target_include_directories(${CMAKE_PROJECT_NAME}
 	    ${PROJECT_SOURCE_DIR}/app/vendor/glm
 	    ${PROJECT_SOURCE_DIR}/app/vendor/other
 	    ${PROJECT_SOURCE_DIR}/app/vendor/nlohmann
+        ${PROJECT_SOURCE_DIR}/app/vendor/glfw
         ${PROJECT_SOURCE_DIR}/app/vendor/imgui
         ${PROJECT_SOURCE_DIR}/app/vendor/imgui/backends
 	    ${PROJECT_SOURCE_DIR}/app/vendor/glad/include/glad
@@ -48,6 +56,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 	other
 	shlwapi
 )
+
+message(STATUS "CXX_STANDARD"${CXX_STANDARD})
 
 message(STATUS "COPY ${PROJECT_SOURCE_DIR}/app/resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR}")
 add_custom_target(copy-runtime-files ALL

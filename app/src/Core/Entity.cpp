@@ -26,9 +26,15 @@ std::vector<Component*> Entity::GetComponents()
 
 
 template<typename T>
-void Entity::AddComponent()
+T* Entity::AddComponent()
 {
     return GetScene()->AddComponent<T>(id);
+}
+
+
+Component* Entity::AddComponent(CompID cid)
+{
+    return GetScene()->AddComponent(*this, cid);
 }
 
 
@@ -44,9 +50,16 @@ bool Entity::Exists()
     return id > 0 && scene > 0;
 }
 
+std::vector<Component*> Entity::GetAllComponents()
+{
+    return GetScene()->GetAllComponents(*this);
+}
+
 Scene* Entity::GetScene()
 {
     return Scenes::Get(scene);
 }
+
+
 
 

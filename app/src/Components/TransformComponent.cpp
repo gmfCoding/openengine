@@ -24,6 +24,7 @@ BeginProperties(),
     SProperty1(x),
     SProperty1(y),
     SProperty1(z),
+#undef propType
 #define propType() int
     SProperty1(a)
         EndProperties();

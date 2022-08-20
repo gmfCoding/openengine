@@ -1,3 +1,3 @@
 #ifndef __glad_h_
-#include <glad.h>
+#include <glad/glad.h>
 #endif

@@ -25,7 +25,7 @@ SObject::SObject(std::initializer_list<SPropertyConstructInfo> init)
 
 void* SPropertyField::GetPtr(void* obj)
 {
-    return (void*)((obj) + this->offset);
+    return (void*)(((uint8_t*)obj) + this->offset);
 }
 
 void SPropertyField::ImGuiDraw(const std::string& name, void* obj)

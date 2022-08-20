@@ -23,21 +23,20 @@ void Component::GetProperties(std::vector<SObject*>& prop_list)
 
 }
 
-
 void Component::registrate(std::string const & name, ComponentInfo * ci)
 {
     ComponentSystem::Get()->Register(name, "");
-    registry()[name] = ci;
+    registry()[ci->hash] = ci;
 }
 
-Component* Component::instantiate(std::string const & name)
+Component* Component::instantiate(CompID cid)
 {
-    auto it = registry().find(name);
+    auto it = registry().find(cid);
     return it == registry().end() ? nullptr : (it->second)->creator();
 }
 
-std::unordered_map<std::string, ComponentInfo*> & Component::registry()
+std::unordered_map<CompID, ComponentInfo*> & Component::registry()
 {
-    static std::unordered_map<std::string, ComponentInfo*> impl;
+    static std::unordered_map<CompID, ComponentInfo*> impl;
     return impl;
 }

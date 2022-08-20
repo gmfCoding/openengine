@@ -19,7 +19,7 @@ struct SPropertyConstructInfo{
     std::string name;
     std::string type;
     int size;
-    int offset;
+    size_t offset;
 };
 
 class SObject

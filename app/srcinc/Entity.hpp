@@ -26,9 +26,12 @@ public:
 
     template <typename T>
     std::vector<Component*> GetComponents();
+    std::vector<Component*> GetAllComponents();
 
     template <typename T>
-    void AddComponent();
+    T* AddComponent();
+
+    Component* AddComponent(CompID id);
 
     template <typename T>
     void RemoveComponent();
