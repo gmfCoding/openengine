@@ -1,8 +1,15 @@
 #ifndef GMFC_COMPONENTSYSTEM_H
 #define GMFC_COMPONENTSYSTEM_H
+
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <map>
 #include <string>
 #include <vector>
+#endif
+
 #include "Core/Types.hpp"
 
 class ComponentSystem

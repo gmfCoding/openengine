@@ -1,5 +1,10 @@
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <map>
 #include <string>
+#endif
 
 #ifndef OE_SPROPERTY_FIELD
 #define OE_SPROPERTY_FIELD

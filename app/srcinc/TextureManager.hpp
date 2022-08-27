@@ -1,11 +1,18 @@
 #ifndef TEXTUREMANAGER_INCLUDE_H
 #define TEXTUREMANAGER_INCLUDE_H
 
-#include "LoadGlad.h"
-#include "gmfc_image.hpp"
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <map>
 #include <set>
 #include <vector>
+#endif
+
+
+#include "LoadGlad.h"
+#include "gmfc_image.hpp"
 #include <glm.hpp>
 #include "CommonData.hpp"
 

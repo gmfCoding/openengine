@@ -1,7 +1,12 @@
 #ifndef GMFC_ENTITY_H
 #define GMFC_ENTITY_H
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <string>
 #include <vector>
+#endif
 
 #include "Core/Types.hpp"
 

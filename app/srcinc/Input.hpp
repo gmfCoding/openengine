@@ -1,5 +1,13 @@
+
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <vector>
+#endif
+
 #include <functional>
+
 #include "KeyCodes.h"
 #ifndef OE_INPUT
 #define OE_INPUT

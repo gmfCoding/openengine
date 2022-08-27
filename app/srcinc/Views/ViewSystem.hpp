@@ -1,7 +1,13 @@
 #ifndef OE_VIEWS
 #define OE_VIEWS
+
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <vector>
 #include <map>
+#endif
 
 #include "Views/View.hpp"
 

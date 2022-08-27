@@ -1,13 +1,19 @@
 #ifndef GMFC_COMPONENT_H
 #define GMFC_COMPONENT_H
-#include "Components/ComponentSystem.hpp"
-#include "Components/ComponentGenHpp.hpp"
 
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <string>
 #include <memory>
 #include <unordered_map>
-
 #include <vector>
+#endif
+
+#include "Components/ComponentSystem.hpp"
+#include "Components/ComponentGenHpp.hpp"
+
 #include "SObject.hpp"
 #include "hashing.hpp"
 #include <iostream>

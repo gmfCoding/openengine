@@ -1,7 +1,13 @@
 #ifndef OE_SCENES_HPP
 #define OE_SCENES_HPP
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <unordered_set>
 #include <unordered_map>
+#endif
+
 #include "Core/Scene.hpp"
 #include "InstanceSystem.hpp"
 #include "Core/Types.hpp"

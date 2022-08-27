@@ -1,11 +1,17 @@
 #ifndef OE_SCENE_H
 #define OE_SCENE_H
 #include <concepts>
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <string>
 #include <vector>
 #include <unordered_set>
 #include <set>
 #include <unordered_map>
+#endif
+
 #include <list>
 
 #include "Core/Types.hpp"

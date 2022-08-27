@@ -118,7 +118,7 @@ void Editor::EscapeControl()
         Input::instance->MouseIgnoreNextDelta();
     }
 }
-
+bool test = true;
 void Editor::EditorUpdate()
 {
     glClearColor(.7,.7,.7,1);
@@ -129,8 +129,8 @@ void Editor::EditorUpdate()
     ImGui::NewFrame();
 
     EscapeControl();
-    bool test = true;
-    //ImGui::ShowDemoWindow(&test);
+    
+    ImGui::ShowDemoWindow(&test);
     
     this->viewSystem->DrawAllViews();
 

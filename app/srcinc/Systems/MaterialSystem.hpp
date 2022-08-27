@@ -1,6 +1,12 @@
 #pragma once
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <map>
 #include <string>
+#endif
+
 #include <GLFW/glfw3.h>
 
 #include "Material.hpp"

@@ -2,7 +2,11 @@
 #define GIZMO3D_H
 #include "Object.hpp"
 #include "LoadGlad.h"
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <vector>
+#endif
 class ViewCamera;
 
 class GizmoLine : public EngineObject {

@@ -18,6 +18,7 @@ add_subdirectory(app/vendor/imgui)
 add_subdirectory(app/vendor/glad)
 add_subdirectory(app/vendor/other)
 
+add_definitions(-DOE_SRC_USE_PCH)
 # Populates SOURCES with the src files defined in app/src/CMakeLists.txt 
 add_subdirectory(app/src)
 
@@ -26,8 +27,7 @@ add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 target_precompile_headers(${CMAKE_PROJECT_NAME}
   PUBLIC
-    ${PROJECT_SOURCE_DIR}/app/srcinc/pch/std.hpp
-    ${PROJECT_SOURCE_DIR}/app/srcinc/pch/gl.hpp
+    ${PROJECT_SOURCE_DIR}/app/srcinc/pch/pch.hpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME}

@@ -1,6 +1,10 @@
 #include "Components/ComponentSystem.hpp"
 #include "hashing.hpp"
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <vector>
+#endif
 
 
 ComponentSystem* ComponentSystem::instance;

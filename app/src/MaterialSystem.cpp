@@ -1,6 +1,11 @@
 #include "LoadGlad.h"
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <map>
 #include <vector>
+#endif
+
 #include "Systems/MaterialSystem.hpp"
 #include "fileio.hpp"
 #include "gldebug.hpp"

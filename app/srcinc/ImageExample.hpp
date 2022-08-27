@@ -1,7 +1,13 @@
 #include "LoadGlad.h"
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <string>
 #include <vector>
-#include <glm.hpp>
+#endif
+
+#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
 

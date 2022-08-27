@@ -1,7 +1,12 @@
 #include <sstream>
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <string>
 #include <map>
 #include <iostream>
+#endif
 
 #include "Components/ComponentGenHpp.hpp"
 #include "Components/Component.hpp"

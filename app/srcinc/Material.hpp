@@ -1,7 +1,14 @@
 #pragma once
 
+
+
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <string>
 #include <map>
+#endif
+
 #include <any>
 
 #include "LoadGlad.h"

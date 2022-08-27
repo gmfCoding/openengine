@@ -1,7 +1,12 @@
+#ifdef OE_SRC_USE_PCH
+#include "pch/pch.hpp"
+#else
 #include <map>
 #include <string>
 #include <vector>
 #include <iostream>
+#endif
+
 #include <glm/gtc/type_ptr.hpp>
 #include "LoadGlad.h"
 
