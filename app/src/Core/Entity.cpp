@@ -1,6 +1,8 @@
 #include "Entity.hpp"
 #include "Systems/Scenes.hpp"
 
+Entity Entity::none = Entity {EntityID(0), SceneID(0)};
+
 std::string Entity::GetName()
 {
     return GetScene()->GetEntityName(*this);
@@ -54,6 +56,25 @@ std::vector<Component*> Entity::GetAllComponents()
 {
     return GetScene()->GetAllComponents(*this);
 }
+
+
+Entity Entity::GetParent()
+{
+    auto p = GetScene()->entityHierarchyMap[this->id]->m_parent;
+    return Entity { p ? p->m_id : 0, scene};
+}
+
+void Entity::SetParent(Entity entity, int index)
+{
+    GetScene()->SetParent(entity, *this, index);
+}
+
+
+void Entity::SetIndex(int i)
+{
+    GetScene()->SetEntityIndex(*this, i);
+}
+
 
 Scene* Entity::GetScene()
 {

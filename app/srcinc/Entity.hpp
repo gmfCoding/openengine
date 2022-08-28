@@ -22,6 +22,8 @@ public:
     EntityID id;
     SceneID scene;
 
+    static Entity none;
+
 public:
     std::string GetName();
     void SetName(std::string name);
@@ -40,6 +42,11 @@ public:
 
     template <typename T>
     void RemoveComponent();
+
+    Entity GetParent();
+
+    void SetParent(Entity entity, int index = -1);
+    void SetIndex(int i);
 
     bool Exists();
 

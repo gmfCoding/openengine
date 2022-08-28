@@ -13,7 +13,7 @@
 #include "Core/Scene.hpp"
 #include "Systems/Scenes.hpp"
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 #include "gmfc_image.hpp"
 
 Editor* Editor::instance;

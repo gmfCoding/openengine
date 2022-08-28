@@ -55,7 +55,7 @@ void InspectorView::OnDrawGUI()
                     for(auto p2 : p->properties)
                     {
                         p2.second.ImGuiDraw(p2.first + "##" + s, e);
-
+                        
                         if (ComponentSystem::Get()->Exists(p2.second.type) && ImGui::BeginDragDropTarget())
                         {
                             std::cout << "Dropped Component::";

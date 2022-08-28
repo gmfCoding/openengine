@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <set>
 #include <unordered_map>
+#include <iostream>
 #endif
 
 #include <list>
@@ -39,7 +40,7 @@ namespace std {
 class EntityHierarchyNode
 {
     public:
-    std::set<EntityHierarchyNode*> m_nodes;
+    std::vector<EntityHierarchyNode*> m_nodes;
     EntityHierarchyNode* m_parent;
     EntityID m_id;
 
@@ -48,6 +49,18 @@ class EntityHierarchyNode
 
     }
 
+    
+    ~EntityHierarchyNode()
+    {
+        std::cout << "Deleting Entity:" << m_id;
+    }
+};
+
+enum DeletionOrigin
+{
+    DeleteHierarchy,
+    DeleteEntity,
+    External
 };
 
 class Scene
@@ -58,7 +71,7 @@ class Scene
     std::unordered_set<ActiveComponent*> activeComponents;
 
     public:
-    std::set<EntityHierarchyNode*> root;
+    std::vector<EntityHierarchyNode*> root;
     std::unordered_map<EntityID, EntityHierarchyNode*> entityHierarchyMap;
 
     std::unordered_set<Entity> entities;  
@@ -66,8 +79,6 @@ class Scene
     static InstanceSet<EntityID> entityIDs;
 
     static std::unordered_map<EntityID, std::string> entityNames;
-
-
 
 public:
 
@@ -105,14 +116,20 @@ public:
     Entity CreateEntity(std::string name, Entity parent);
     Entity CreateEntity(Entity parent);
 
-    void SetParent(Entity parentEtre, Entity childEtre);
+    void SetParent(Entity parentEtre, Entity childEtre, int index = 0);
+    void SetEntityIndex(Entity entity, int index);
 
     void AddEntity(Entity entity);
     void AddEntity(Entity entity, std::vector<Component*> components);
     static void MoveEntity(Entity entity, SceneID dest);
-    void RemoveEntity(Entity entity);
-    void DeleteEntity(Entity entity);
 
+    void RemoveEntity(Entity entity);
+    void DeleteEntity(Entity entity, DeletionOrigin delctx = DeletionOrigin::External);
+    void EraseEntityHierarchy(EntityHierarchyNode* n);
+    void DeleteEntityFromHierarchy(Entity entity);
+    void DeleteHierarchy(EntityHierarchyNode* e, DeletionOrigin delctx = DeletionOrigin::External);
+    
+    std::vector<EntityHierarchyNode*>* GetParentVector(EntityHierarchyNode* e);
 
     SceneID GetSceneID();
 
