@@ -1,54 +1,38 @@
 # About
-**sample-glad-imgui-cmake** is my example project for getting **imgui**, **glad**, **glfw** with **cmake** to generate the buildfiles.
+This is my crude attempt at my own engine written in entirely C++ using Dear ImGui, OpenGL, glm.
 
-**Note**: I'm very unexperienced in this area so something could be improved but you are welcome to use this project at your own volition.
-
-This project was mainly made so I could learn about **cmake**, **glad** and **imgui**.
-
+## Libraries
+* Dear ImGui
+* glm
+* glfw
+* glad
 
 # Building
+Building this requires little setup, I assume you know how to use cmake, it's just as simple as calling:
 
-I don't quite entirely understand how cmake works yet, I've been working on this with Windows 10 with **MSYS2 MinGW** installed so I've been using the **MinGW Makefiles** generators
+	cmake -B build -G "<generator>"
 
-1. Create a build directory (for cleanliness/organisation and easy cleaning)
+`<generator>` is an Build Tool Generator (BTG) that you have installed.
 
-    ```mkdir build;```
+## Windows
+I personally use `MinGW Makefiles` as a BTG and to set that up you'll have to download [msys2](https://www.msys2.org/), once installed run `MSYS MinGW` application and install the mingw64 package via:
 
-    ```cd build;```
+	pacman -S mingw-w64-x86_64-gcc
 
-2. Generate the MinGW Makefiles makefiles
+I personally also use vscode to program, I have used visual studio community in the past it's great, but I am a masochist and I like compilation errors.
 
-    ```cmake -G "MinGW Makefiles" ../;```
+But in using vscode I have made a bunch of vscode tasks that can build this project in .vscode/tasks.json you can find the config that automatically runs cmake generate and cmake build called `"Cmake Generate"` and `"Cmake Build"` the first makes the build directory and the second compiles the code.  
+Some older commits will require modification to this tasks.json to work, specifically around args, newer versions uses args array with objects with escaped quoting, see newer task.json for example.
 
-3. Run the buildsystem to compile the program
+# Systems
+## Component System:
 
-    ```cmake --build .;```
+The component system is rudimentary and not a true ECS, it works by auto registering the class and variables to be displayed in the inspector have a special setup requirement, examples in [ComponentGenCpp.hpp](app/srcinc/Components/ComponentGenCpp.hpp)
 
-# Building with G++
+## Entity System:
+Entities can have components.  
+Entities aren't required to have a transform.  
+Entity class is a wrapper for the entity id's and it's scene. Using that information there are wrapper methods to call the scenes entity manipulation methods. ie Entities "SetName" method just "redirects" to the scenes "SetEntityName" passing in the entity id.
 
-Just for the sake of the argument how would we go about building this with g++?
-
-1. Create some folders
-
-	`mkdir gpptmp;`
-
-	`mkdir gppbin;`
-
-	`mkdir lib;`
-
-2. Download glfw3 binaries (or build them)
-[glfw.org/download](https://www.glfw.org/download)
-
-3. Grab the appropriate binaries and place them in our newly created lib directory (such as `\lib\glfw3dll.lib`)
-
-4. Separatly compile glad
-
-	`g++ -c app\vendor\glad\src\glad.c -o gpptmp\glad.o -Iapp\vendor\glad\include;`
-
-5. Compile the main program
-	`g++ app\src\*.cpp app\vendor\imgui\*.cpp app\vendor\imgui\backends\imgui_impl_opengl3.cpp app\vendor\imgui\backends\imgui_impl_glfw.cpp -o gppbin\main.exe gpptmp\glad.o app\srcinc -Iapp\vendor\include -Iapp\vendor\glad\include -Iapp\vendor\imgui -Iapp\vendor\imgui\backends -Iapp\vendor\glfw -Llib\ -DGLFW_INCLUDE_NONE -lglfw3 -std=c++17;`
-6. Now we just have to place the `glfw3.dll` inside our `gppout` directory and the executable should be able to be executed!
-
-What a mess! That's why we use a buildsystem so we don't have to deal with this mess everytime.
-Adding new source files is a pain this way, but can be some what cleaned up (see [gpp_build.bat](/gpp_build.bat))
-
+## Scene:
+The scene stores all most everything, entities, their components, their heirarchial relation, the scene class has methods that manipulate this data.  

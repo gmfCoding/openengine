@@ -36,3 +36,37 @@ Component * type::create() {\
 }
 
 #define propOwner() mainType()
+
+
+/*
+Component variables that need to be displayed in the inspector must be marked as an SProperty
+SProperties are defined in the component source file (cpp)
+However before you do that you must start a BeginProperties() 
+which is a macro begins a function to record following defined SProperties
+Example:
+
+// the typename of our type
+#define mainType() TestComponent
+// the direct base's typename of our type
+#define baseType() Component
+
+// macro for auto registering and constructor, passed arguments are initialiser lists
+RegisterComponent(reference(nullptr), data("Hello, World!"))
+
+// begin the properties
+// subsequent SProperties will be recorded
+// SProperties require the variable name and the type
+BeginProperties(),
+SProperty2(reference, TestComponent*),
+SProperty2(data, std::string)
+EndProperties();
+// We must use EndProperties to end the properties
+
+// Needed if in header
+#include "CompGenClear.hpp"
+
+
+
+
+
+*/
