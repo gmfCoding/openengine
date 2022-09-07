@@ -1,9 +1,10 @@
 #ifndef OE_OBJECT_H
 #define OE_OBJECT_H
+#include "Types.hpp"
 
 class Object
 {
-    int32_t instanceID;
+    CommonID instanceID;
 
     Object();
 };
