@@ -16,14 +16,14 @@
 #include "AtulPwd.hpp"
 
 #include "Rendering.hpp"
-#include "Object.hpp"
+#include "Legacy/LegacyObject.hpp"
 #include "ViewCamera.hpp"
 
 #include "Systems/MaterialSystem.hpp"
 
 ViewCamera* Renderer::camera;
 
-// void Renderer::RenderObject(const EngineObject* object)
+// void Renderer::RenderObject(const LegacyObject* object)
 // {    
 //     MeshRenderer* renderer = object->renderer;
 //     auto program = MaterialSystem::materialMap["default"]->programID;
@@ -50,7 +50,7 @@ void MeshRenderer::Bind(Mesh* mesh)    {
         vao_gen = true;
         GLCall(glGenVertexArrays(1, &m_vao)); // Vertex  Array  Object
         GLCall(glGenBuffers(1, &m_vbo)); // Vertex  Buffer Object (temp)
-        GLCall(glGenBuffers(1, &m_ibo)); // Element Buffer EngineObject (temp)
+        GLCall(glGenBuffers(1, &m_ibo)); // Element Buffer LegacyObject (temp)
     }
 
     GLCall(glBindVertexArray(m_vao));

@@ -14,7 +14,7 @@
 #include "Mesh.hpp"
 #include "ViewCamera.hpp"
 
-class EngineObject;
+class LegacyObject;
 
 class Shader {
     public:

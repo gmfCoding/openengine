@@ -1,5 +1,6 @@
 #include "Systems/InstanceSystem.hpp"
 
+#include <random>
 
 InstanceSet<CommonID> InstanceSystem::identities = InstanceSet<CommonID>();
 

@@ -1,6 +1,6 @@
 #ifndef GIZMO3D_H
 #define GIZMO3D_H
-#include "Object.hpp"
+#include "Legacy/LegacyObject.hpp"
 #include "LoadGlad.h"
 #ifdef OE_SRC_USE_PCH
 #include "pch/pch.hpp"
@@ -9,7 +9,7 @@
 #endif
 class ViewCamera;
 
-class GizmoLine : public EngineObject {
+class GizmoLine : public LegacyObject {
     int shaderProgram;
     unsigned int VBO, VAO;
     std::vector<float> vertices;

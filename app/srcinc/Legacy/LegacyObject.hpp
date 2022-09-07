@@ -9,10 +9,10 @@ class Mesh;
 
 
 #define OBJ_DIRTYMATRIX 0x0
-#define OBJ_SETDIRTY flags |= EngineObject::Flags::DirtyMat;
-#define OBJ_CLEAR_DIRTY flags &= ~EngineObject::Flags::DirtyMat;
+#define OBJ_SETDIRTY flags |= LegacyObject::Flags::DirtyMat;
+#define OBJ_CLEAR_DIRTY flags &= ~LegacyObject::Flags::DirtyMat;
 
-class EngineObject {
+class LegacyObject {
 public:
     char* name;
     Mesh* mesh;
@@ -52,7 +52,7 @@ public:
     void UpdateTransform() const;
 
 
-    EngineObject();
+    LegacyObject();
     mutable glm::mat4 transform;
     
 protected:

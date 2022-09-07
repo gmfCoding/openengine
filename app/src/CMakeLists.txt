@@ -6,7 +6,6 @@ ViewCamera.cpp
 Input.cpp
 Material.cpp
 MaterialSystem.cpp
-Object.cpp
 ViewCameraController.cpp
 Rendering.cpp
 GizmoLine.cpp
@@ -26,12 +25,12 @@ Components/ComponentSystem.cpp
 Components/TransformComponent.cpp
 Components/MeshComponent.cpp
 Components/TestComponent.cpp
+Legacy/LegacyObject.cpp
 Core/Entity.cpp
 Core/Scene.cpp
 Editor/Editor.cpp
 Editor/EditorViewSetup.cpp
 SObject.cpp
-SeedFill.cpp
 )
 
 list(TRANSFORM LSOURCE PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
