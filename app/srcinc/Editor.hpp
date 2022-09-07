@@ -14,7 +14,7 @@ class Editor
 
     int width;
     int height;
-    int targetFPS = 1/144;
+    int targetFPS = 144;
     bool limitFPS = true;
 
     public:
