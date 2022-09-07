@@ -39,8 +39,8 @@ class Component
     COMPONENT_BASE_REGISTER(Component)
 
     public:
-    CompID m_instanceID;
-    int m_ComponentType;
+    CommonID m_instanceID;
+    CompID m_ComponentType;
 
     Component(CompID comp_id);
 

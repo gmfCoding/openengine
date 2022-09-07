@@ -11,6 +11,7 @@
 #include "Core/Scene.hpp"
 #include "InstanceSystem.hpp"
 #include "Core/Types.hpp"
+#include "Core/ObjectReference.hpp"
 
 class Scenes
 {

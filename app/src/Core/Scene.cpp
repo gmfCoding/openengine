@@ -73,15 +73,7 @@ std::vector<Component *> Scene::GetAllComponents(Entity entity)
 template <typename T>
 T *Scene::AddComponent(Entity entity)
 {
-    if (IsEntityAssigned(entity))
-    {
-        T *comp = new T();
-        entityComponents[entity.id].push_back(comp);
-        if (comp->IsActiveComponent())
-            activeComponents.emplace((ActiveComponent *)comp);
-        return comp;
-    }
-    return nullptr;
+    return this->AddComponent(entity, T::CID);
 }
 
 Component *Scene::AddComponent(Entity entity, CompID cid)

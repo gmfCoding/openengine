@@ -19,6 +19,8 @@ Views/InspectorView.cpp
 Systems/InstanceSystem.cpp
 Systems/ViewSystem.cpp
 Systems/Scenes.cpp
+Systems/AssetSystem.cpp
+Systems/ObjectSystem.cpp
 Components/ActiveComponent.cpp
 Components/Component.cpp
 Components/ComponentSystem.cpp
@@ -31,6 +33,7 @@ Core/Scene.cpp
 Editor/Editor.cpp
 Editor/EditorViewSetup.cpp
 SObject.cpp
+Util/UUIDGen.cpp
 )
 
 list(TRANSFORM LSOURCE PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")

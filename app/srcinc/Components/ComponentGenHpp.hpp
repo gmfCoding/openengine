@@ -1,5 +1,6 @@
 #include "Core/Types.hpp"
 
+#include "Core/ObjectReference.hpp"
 #define COMPONENT_REGISTER(type, base) public:\
 static SObject properties;\
 type(CompID comp_id);\
@@ -14,4 +15,4 @@ private:
 #define COMPONENT_BASE_REGISTER(type) public:const std::string GET_COMPONENT_NAME() {return #type;} static CompID CID;
 
 #define ComponentRegister(self,base) CompID self::CID = ComponentSystem::Get()->Register(#self, #base);
-#define ComponentDefinition(self,base) class self : public base { COMPONENT_REGISTER(self, base)
+#define ComponentDefinition(self,base) class self; typedef ObjectReference<self> self##Ptr; class self : public base { COMPONENT_REGISTER(self, base)
