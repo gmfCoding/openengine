@@ -8,7 +8,7 @@ template<>
 uint16_t InstanceSet<uint16_t>::GetNew()
 {
     uint16_t id = (uint16_t)rand();
-    while (activeInstances.count(id))
+    while (activeInstances.count(id) && id != 0)
     {
         id = (uint16_t)rand();
     }
@@ -19,7 +19,7 @@ template<>
 uint32_t InstanceSet<uint32_t>::GetNew()
 {
     uint32_t id = (uint32_t)rand();
-    while (activeInstances.count(id))
+    while (activeInstances.count(id) && id != 0)
     {
         id = (uint32_t)rand();
     }

@@ -6,7 +6,6 @@
 #include "Core/Types.hpp"
 #include "Components/Component.hpp"
 
-InstanceSet<EntityID> Scene::entityIDs;
 std::unordered_map<EntityID, std::string> Scene::entityNames;
 
 Scene::Scene() : entityComponents(), activeComponents(), root(), entities()
@@ -26,15 +25,16 @@ void Scene::SetEntityName(Entity entity, std::string &name)
 }
 
 template <typename T>
-T *Scene::GetComponent(Entity entity)
+ObjectReference<T> Scene::GetComponent(Entity entity)
 {
     if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
     {
         for (auto i : entityComponents[entity.id])
         {
-            if (i->CID == T::CID)
+            ObjectReference<T> ref = {i, ObjectLocation::SCENE};
+            if (ref->CID == T::CID)
             {
-                return i;
+                return ref;
             }
         }
     }
@@ -43,16 +43,18 @@ T *Scene::GetComponent(Entity entity)
 }
 
 template <typename T>
-std::vector<T *> Scene::GetComponents(Entity entity)
+std::vector<ObjectReference<T>> Scene::GetComponents(Entity entity)
 {
-    std::vector<T *> comps = std::vector<T *>();
+    std::vector<ObjectReference<T>> comps = std::vector<ObjectReference<T>>();
     if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
     {
+        
         for (auto i : entityComponents[entity.id])
         {
-            if (i->CID == T::CID)
+            ObjectReference<T> ref = {i, ObjectLocation::SCENE};
+            if (ref->CID == T::CID)
             {
-                comps.push_back((T *)i);
+                comps.push_back(ref);
             }
         }
     }
@@ -60,33 +62,35 @@ std::vector<T *> Scene::GetComponents(Entity entity)
     return comps;
 }
 
-std::vector<Component *> Scene::GetAllComponents(Entity entity)
+std::vector<CommonID> Scene::GetAllComponents(Entity entity)
 {
     if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
     {
         return entityComponents[entity.id];
     }
 
-    return std::vector<Component *>(0);
+    return std::vector<CommonID>(0);
 }
 
 template <typename T>
-T *Scene::AddComponent(Entity entity)
+ObjectReference<T> Scene::AddComponent(Entity entity)
 {
     return this->AddComponent(entity, T::CID);
 }
 
-Component *Scene::AddComponent(Entity entity, CompID cid)
+ObjectReference<Component> Scene::AddComponent(Entity entity, CompID cid)
 {
     if (IsEntityAssigned(entity))
     {
-        Component *comp = Component::instantiate(cid);
-        entityComponents[entity.id].push_back(comp);
-        if (comp->IsActiveComponent())
-            activeComponents.emplace((ActiveComponent *)comp);
-        return comp;
+        CommonID id = system.Save(Component::instantiate(cid));
+        ObjectReference<Component> ref(id);
+
+        entityComponents[entity.id].push_back(id);
+        if (ref->IsActiveComponent())
+            activeComponents.emplace(id);
+        return ref;
     }
-    return nullptr;
+    return ObjectReference<Component>(0);
 }
 
 template <typename T>
@@ -96,7 +100,7 @@ void Scene::RemoveComponent(Entity entity)
     {
         for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
         {
-            if ((*it)->m_instanceID == T::CID)
+            if ((ObjectReference<Component>(*it))->m_instanceID == T::CID)
             {
                 entityComponents[entity.id].erase(it);
                 break;
@@ -112,7 +116,7 @@ void Scene::RemoveComponent(Entity entity, Component *component)
     {
         for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
         {
-            if ((*it) == component)
+            if ((*ObjectReference<Component>(*it)) == component)
             {
                 entityComponents[entity.id].erase(it);
                 break;
@@ -122,16 +126,19 @@ void Scene::RemoveComponent(Entity entity, Component *component)
 }
 
 template <typename T>
-std::enable_if_t<std::is_base_of<Component, T>::value, T *> Scene::GetComponent(Entity entity)
+std::enable_if_t<std::is_base_of<Component, T>::value, ObjectReference<T>> Scene::GetComponent(Entity entity)
 {
     if (IsEntityAssigned(entity) && entities.count(entity))
     {
         for (auto &&i : entityComponents[entity.id])
         {
-            if (i->m_ComponentType == T::CID)
-                return i;
+            ObjectReference<Component> ref(i);
+            if (ref->m_ComponentType == T::CID)
+                return ref;
         }
     }
+
+    return ObjectReference<Component>(0);
 }
 
 /*
@@ -146,41 +153,16 @@ void Scene::AddEntity(Entity entity)
         if (old)
         {
             // Grap all the Components from the old Scene
-            std::vector<Component *> components = old->GetAllComponents(entity);
+            std::vector<CommonID> components = old->GetAllComponents(entity);
             // Emplace all the ActiveComponents
             for (auto it = components.begin(); it != components.end(); ++it)
             {
-                if ((*it)->IsActiveComponent())
+                if ((ObjectReference<Component>(*it)->IsActiveComponent()))
                 {
-                    activeComponents.emplace((ActiveComponent *)(*it));
+                    activeComponents.emplace(*it);
                 }
             }
             old->RemoveEntity(entity);
-        }
-    }
-}
-
-/*
-* Adds an entity in this scene, with some components.
-*/
-void Scene::AddEntity(Entity entity, std::vector<Component *> components)
-{
-    if (IsEntityAssigned(entity))
-    {
-        Scene *old = Scenes::Get(entity.scene);
-        if (old)
-            old->RemoveEntity(entity);
-
-        entity.scene = sceneID;
-        this->entityComponents[entity.id] = components;
-
-        // Emplace all the ActiveComponents
-        for (auto it = components.begin(); it != components.end(); ++it)
-        {
-            if ((*it)->IsActiveComponent())
-            {
-                activeComponents.emplace((ActiveComponent *)(*it));
-            }
         }
     }
 }
@@ -202,7 +184,7 @@ void Scene::MoveEntity(Entity entity, SceneID dest)
 
     if (_old)
     {
-        std::vector<Component *> components = _old->GetAllComponents(entity);
+        std::vector<CommonID> components = _old->GetAllComponents(entity);
         _old->RemoveEntity(entity);
         _new->AddEntity(entity);
     }
@@ -223,9 +205,9 @@ void Scene::RemoveEntity(Entity entity)
         // Remove all ActiveComponents
         for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
         {
-            if ((*it)->IsActiveComponent())
+            if ((ObjectReference<Component>(*it))->IsActiveComponent())
             {
-                activeComponents.erase((ActiveComponent *)(*it));
+                activeComponents.erase(*it);
             }
         }
 
@@ -244,10 +226,9 @@ void Scene::DeleteEntity(Entity entity, DeletionOrigin delctx)
         // Remove all ActiveComponents
         for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
         {
-            auto test = *it;
-            if (test->IsActiveComponent())
+            if (ObjectReference<Component>(*it)->IsActiveComponent())
             {
-                activeComponents.erase((ActiveComponent *)(*it));
+                activeComponents.erase(*it);
             }
         }
 
@@ -312,8 +293,9 @@ void Scene::DeleteHierarchy(EntityHierarchyNode* e, DeletionOrigin delctx)
 */
 Entity Scene::CreateEntity()
 {
-    Entity e = Entity();
-    e.id = entityIDs.GetNew();
+    Entity* a = new Entity();
+    Entity& e = *a;
+    e.id = system.Save(a);
     e.scene = sceneID;
     entities.emplace(e);
     auto ehn = new EntityHierarchyNode(e.id, nullptr);

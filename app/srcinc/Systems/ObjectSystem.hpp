@@ -13,6 +13,7 @@
 
 class ObjectSystem
 {
+    public:
     static ObjectSystem instance;
 
     InstanceSet<CommonID> identities;
@@ -26,7 +27,7 @@ class ObjectSystem
     template<typename T>
     static T* GetObject(ObjectReference<T> ref);
 
-
+    
 
     CommonID m_NewID();
     static CommonID NewID();

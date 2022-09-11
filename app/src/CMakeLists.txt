@@ -30,8 +30,10 @@ Components/TestComponent.cpp
 Legacy/LegacyObject.cpp
 Core/Entity.cpp
 Core/Scene.cpp
+Core/ObjectReference.cpp
 Editor/Editor.cpp
 Editor/EditorViewSetup.cpp
+Editor/SceneSerialisation.cpp
 SObject.cpp
 Util/UUIDGen.cpp
 )

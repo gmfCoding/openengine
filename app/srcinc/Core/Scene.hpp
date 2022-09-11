@@ -21,6 +21,10 @@
 
 #include "Entity.hpp"
 
+#include "Core/ObjectReference.hpp"
+#include "Systems/ObjectSystem.hpp"
+
+
 
 class Component;
 class ActiveComponent;
@@ -67,16 +71,16 @@ class Scene
 {
     SceneID sceneID;
 
-    std::unordered_map<EntityID, std::vector<Component*>> entityComponents;
-    std::unordered_set<ActiveComponent*> activeComponents;
+    ObjectSystem system;
+
+    std::unordered_map<EntityID, std::vector<CommonID>> entityComponents;
+    std::unordered_set<CommonID> activeComponents;
 
     public:
     std::vector<EntityHierarchyNode*> root;
     std::unordered_map<EntityID, EntityHierarchyNode*> entityHierarchyMap;
 
-    std::unordered_set<Entity> entities;  
-
-    static InstanceSet<EntityID> entityIDs;
+    std::unordered_set<Entity> entities;
 
     static std::unordered_map<EntityID, std::string> entityNames;
 
@@ -89,17 +93,17 @@ public:
     void SetEntityName(Entity entity, std::string& name);
 
     template<typename T>
-    T* GetComponent(Entity entity);
+    ObjectReference<T> GetComponent(Entity entity);
 
     template<typename T>
-    std::vector<T*> GetComponents(Entity entity);
+    std::vector<ObjectReference<T>> GetComponents(Entity entity);
 
-    std::vector<Component*> GetAllComponents(Entity entity);
+    std::vector<CommonID> GetAllComponents(Entity entity);
 
     template<typename T>
-    T* AddComponent(Entity entity);
+    ObjectReference<T> AddComponent(Entity entity);
 
-    Component* AddComponent(Entity entity, CompID cid);
+    ObjectReference<Component> AddComponent(Entity entity, CompID cid);
 
     template<typename T>
     void RemoveComponent(Entity entity);
@@ -107,7 +111,7 @@ public:
     void RemoveComponent(Entity entity, Component* component);
     
     template <typename T>
-    std::enable_if_t<std::is_base_of<Component, T>::value, T*> GetComponent(Entity entity);
+    std::enable_if_t<std::is_base_of<Component, T>::value, ObjectReference<T>> GetComponent(Entity entity);
 
     bool IsEntityAssigned(Entity entity);
 
@@ -120,7 +124,7 @@ public:
     void SetEntityIndex(Entity entity, int index);
 
     void AddEntity(Entity entity);
-    void AddEntity(Entity entity, std::vector<Component*> components);
+    
     static void MoveEntity(Entity entity, SceneID dest);
 
     void RemoveEntity(Entity entity);
@@ -133,7 +137,7 @@ public:
 
     SceneID GetSceneID();
 
-
+    friend class SceneSerialisation;
     friend class Scenes;
 };
 #endif

@@ -5,6 +5,9 @@
 #include "Components/TestComponent.hpp"
 #include <string>
 
+
+#include "Core/ObjectReference.hpp" 
+
 const ImVec2 size = ImVec2(300, 800);
 
 void Draw(void* test)
@@ -34,9 +37,10 @@ void InspectorView::OnDrawGUI()
 
 
         std::vector<SObject*> properties;
-        for (auto e : this->selected.GetAllComponents())
+        for (auto comp : this->selected.GetAllComponents())
         {
-            std::string s = std::string(ComponentSystem::Get()->GetName(e->m_ComponentType)) + "##" + std::to_string(e->m_instanceID);
+            ObjectReference <Component> ref(comp);
+            std::string s = std::string(ComponentSystem::Get()->GetName(ref->m_ComponentType)) + "##" + std::to_string(ref->m_instanceID);
 
             if (ImGui::CollapsingHeader(s.c_str(), ImGuiTreeNodeFlags_None))
             {
@@ -44,17 +48,17 @@ void InspectorView::OnDrawGUI()
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
                 {
                     // Set payload to carry the index of our item (could be anything)
-                    ImGui::SetDragDropPayload("DRAG_COMPONENT", &e, sizeof(Component*), ImGuiCond_Once);
+                    ImGui::SetDragDropPayload("DRAG_COMPONENT", &ref, sizeof(Component*), ImGuiCond_Once);
                     ImGui::EndDragDropSource();
                 }
 
-                e->GetPropertiesLocal(properties);
+                ref->GetPropertiesLocal(properties);
 
                 for(auto p : properties)
                 {
                     for(auto p2 : p->properties)
                     {
-                        p2.second.ImGuiDraw(p2.first + "##" + s, e);
+                        p2.second.ImGuiDraw(p2.first + "##" + s, *ref);
                         
                         if (ComponentSystem::Get()->Exists(p2.second.type) && ImGui::BeginDragDropTarget())
                         {
@@ -67,7 +71,7 @@ void InspectorView::OnDrawGUI()
 
                                 if(dropped->GET_COMPONENT_NAME() == p2.second.type)
                                 {
-                                    Component** dest = (Component**)p2.second.GetPtr((char*)e);
+                                    Component** dest = (Component**)p2.second.GetPtr((char*)*ref);
                                     *dest = dropped;
                                 }
                             }

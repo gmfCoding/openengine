@@ -11,9 +11,16 @@ enum ObjectLocation
 template<typename T>
 class ObjectReference
 {
-    CommonID id;
-    ObjectLocation location;
+private:
+    CommonID m_id;
+    ObjectLocation m_location;
 
+public:
+    ObjectReference(CommonID id);
+    ObjectReference(CommonID id, ObjectLocation location);
+    bool IsValid();
+    
+    T* operator*();
     T* operator->();
 };
 #endif

@@ -15,26 +15,26 @@ void Entity::SetName(std::string name)
 }
 
 template<typename T>
-Component* Entity::GetComponent()
+ObjectReference<T> Entity::GetComponent()
 {
     return GetScene()->GetComponent<T>(id);
 }
 
 template<typename T>
-std::vector<Component*> Entity::GetComponents()
+std::vector<ObjectReference<Component>> Entity::GetComponents()
 {
     return GetScene()->GetComponents<T>(id);
 }
 
 
 template<typename T>
-T* Entity::AddComponent()
+ObjectReference<T> Entity::AddComponent()
 {
     return GetScene()->AddComponent<T>(id);
 }
 
 
-Component* Entity::AddComponent(CompID cid)
+ObjectReference<Component> Entity::AddComponent(CompID cid)
 {
     return GetScene()->AddComponent(*this, cid);
 }
@@ -52,7 +52,7 @@ bool Entity::Exists()
     return id > 0 && scene > 0;
 }
 
-std::vector<Component*> Entity::GetAllComponents()
+std::vector<CommonID> Entity::GetAllComponents()
 {
     return GetScene()->GetAllComponents(*this);
 }

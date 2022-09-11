@@ -8,7 +8,9 @@
 #include <vector>
 #endif
 
+
 #include "Core/Types.hpp"
+#include "Core/ObjectReference.hpp"
 
 #define ENTITY_FLAG_ACTIVE 0x1
 #define ENTITY_FLAG_INACTIVE 0x0
@@ -29,16 +31,16 @@ public:
     void SetName(std::string name);
 
     template <typename T>
-    Component *GetComponent();
+    ObjectReference<T> GetComponent();
 
     template <typename T>
-    std::vector<Component*> GetComponents();
-    std::vector<Component*> GetAllComponents();
+    std::vector<ObjectReference<Component>> GetComponents();
+    std::vector<CommonID> GetAllComponents();
 
     template <typename T>
-    T* AddComponent();
+    ObjectReference<T> AddComponent();
 
-    Component* AddComponent(CompID id);
+    ObjectReference<Component> AddComponent(CompID id);
 
     template <typename T>
     void RemoveComponent();
