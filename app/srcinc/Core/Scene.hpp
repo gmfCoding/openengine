@@ -13,9 +13,6 @@
 #include <iostream>
 #endif
 
-#include <unordered_map>
-
-
 #include <list>
 
 #include "Core/Types.hpp"
