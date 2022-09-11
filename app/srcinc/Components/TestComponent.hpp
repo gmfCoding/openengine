@@ -8,7 +8,7 @@
 ComponentDefinition(TestComponent, Component)
 
 public:
-    TestComponent* dragMe;
+    ObjectReference<TestComponent> dragMe;
     std::string data;
 };
 

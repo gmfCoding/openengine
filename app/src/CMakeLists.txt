@@ -12,6 +12,7 @@ GizmoLine.cpp
 TextureManager.cpp
 CommonData.cpp
 hashing.cpp
+SObject.cpp
 Views/SceneView.cpp
 Views/HierarchyView.cpp
 Views/View.cpp
@@ -30,11 +31,10 @@ Components/TestComponent.cpp
 Legacy/LegacyObject.cpp
 Core/Entity.cpp
 Core/Scene.cpp
-Core/ObjectReference.cpp
+Core/Object.cpp
 Editor/Editor.cpp
 Editor/EditorViewSetup.cpp
 Editor/SceneSerialisation.cpp
-SObject.cpp
 Util/UUIDGen.cpp
 )
 

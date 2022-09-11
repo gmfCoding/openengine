@@ -14,13 +14,16 @@ struct SPropertyField
     int size;
     int offset;
 
-    SPropertyField(int pSize, const std::string& pType, int pOffset);
+    SPropertyField(int pSize, const std::string &pType, int pOffset);
 
-    void ImGuiDraw(const std::string& name, void* obj);
-    void* GetPtr(void* obj);
+    void ImGuiDraw(const std::string &name, void *obj);
+    void *GetPtr(void *obj);
+
+    std::string GetGenericType();
 };
 
-struct SPropertyConstructInfo{
+struct SPropertyConstructInfo
+{
     std::string name;
     std::string type;
     int size;

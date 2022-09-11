@@ -54,24 +54,30 @@ void InspectorView::OnDrawGUI()
 
                 ref->GetPropertiesLocal(properties);
 
+            // For each properties list (each class has it's own, even base/super classes)
                 for(auto p : properties)
                 {
+                    // For each properties in ^^each list
                     for(auto p2 : p->properties)
                     {
-                        p2.second.ImGuiDraw(p2.first + "##" + s, *ref);
+
+
+                        p2.second.ImGuiDraw(p2.first + "##" + s, ref.Get());
                         
-                        if (ComponentSystem::Get()->Exists(p2.second.type) && ImGui::BeginDragDropTarget())
+                        if (p2.second.type.find("ObjectReference") != std::string::npos && ImGui::BeginDragDropTarget())
                         {
                             std::cout << "Dropped Component::";
                             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAG_COMPONENT"))
                             {
-                                TestComponent* dropped = *(TestComponent**)payload->Data;
+                                ObjectReference<Component> dropped = *(ObjectReference <Component>*)payload->Data;
 
                                 std::cout << dropped->m_instanceID << " of " << dropped->GET_COMPONENT_NAME() << std::endl;
+                                //TODO: instead check for dropped is assignable from p2's type
 
-                                if(dropped->GET_COMPONENT_NAME() == p2.second.type)
+                                std::string cname = dropped->GET_COMPONENT_NAME();
+                                if(cname == p2.second.GetGenericType())
                                 {
-                                    Component** dest = (Component**)p2.second.GetPtr((char*)*ref);
+                                    ObjectReference<Component>* dest = (ObjectReference<Component>*)p2.second.GetPtr((char*)ref.Get());
                                     *dest = dropped;
                                 }
                             }

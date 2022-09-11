@@ -36,14 +36,21 @@ void SPropertyField::ImGuiDraw(const std::string& name, void* obj)
         ImGui::InputFloat(name.c_str(), (float*)(((char*)obj) + this->offset));
     else if(this->type == "std::string")
         ImGui::InputText(name.c_str(), ((std::string*)this->GetPtr(obj))->data(), 255);
-    else if(this->type == "TestComponent")
+    else if(this->GetGenericType() == "TestComponent")
     {
-        TestComponent* c = (*(TestComponent**)this->GetPtr(obj));
-        if(c != nullptr)
-            ImGui::Text(c->data.c_str());
+        ObjectReference<TestComponent> dest = *(ObjectReference<TestComponent>*)GetPtr(obj);
+        if(dest.IsValid())
+            ImGui::Text(dest->data.c_str());
         else
             ImGui::Text("TestComponent_Unset");
     }
     else
         ImGui::Text(name.c_str());
+}
+
+std::string SPropertyField::GetGenericType()
+{
+    size_t type_start = type.find('<') + 1;
+    size_t type_end = type.find('>') - type_start;
+    return type.substr(type_start, type_end);
 }

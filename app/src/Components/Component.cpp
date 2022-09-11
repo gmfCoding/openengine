@@ -5,7 +5,7 @@
 CompID Component::CID = ComponentSystem::Get()->Register("Component", "");
 Component::Component(CompID comp_id)
 {
-    m_instanceID = InstanceSystem::identities.GetNew();
+    m_instanceID = ObjectSystem::instance.Save(this);
     m_ComponentType = comp_id;
     std::cout << "Made TransformComponent Instance:" << comp_id;
 }

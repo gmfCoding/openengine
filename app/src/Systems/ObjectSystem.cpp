@@ -1,25 +1,8 @@
 #include "Systems/ObjectSystem.hpp"
+#define SKIP_OE_ASSET_SYSTEM
 #include "Systems/AssetSystem.hpp"
-
+#undef SKIP_OE_ASSET_SYSTEM
 ObjectSystem ObjectSystem::instance;
-
-template<typename T>
-T* ObjectSystem::m_GetObject(ObjectReference<T> ref)
-{
-    if(ref.location == ObjectLocation::SCENE)
-    {
-        return (T*)this->objects[ref.id];
-    }
-
-    return AssetSystem::GetObject(ref);
-}
-
-template<typename T>
-T* ObjectSystem::GetObject(ObjectReference<T> ref)
-{
-    return ObjectSystem::instance.m_GetObject(ref);
-}
-
 
 CommonID ObjectSystem::m_NewID()
 {
@@ -28,7 +11,7 @@ CommonID ObjectSystem::m_NewID()
 
 CommonID ObjectSystem::NewID()
 {
-    return ObjectSystem::instance.NewID();
+    return ObjectSystem::instance.m_NewID();
 }
 
 CommonID ObjectSystem::m_Save(void* data)

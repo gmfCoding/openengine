@@ -82,7 +82,8 @@ ObjectReference<Component> Scene::AddComponent(Entity entity, CompID cid)
 {
     if (IsEntityAssigned(entity))
     {
-        CommonID id = system.Save(Component::instantiate(cid));
+        Component* comp = Component::instantiate(cid);
+        CommonID id = comp->m_instanceID;
         ObjectReference<Component> ref(id);
 
         entityComponents[entity.id].push_back(id);
@@ -116,7 +117,7 @@ void Scene::RemoveComponent(Entity entity, Component *component)
     {
         for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
         {
-            if ((*ObjectReference<Component>(*it)) == component)
+            if ((ObjectReference<Component>(*it).Get()) == component)
             {
                 entityComponents[entity.id].erase(it);
                 break;
