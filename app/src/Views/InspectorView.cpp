@@ -7,18 +7,42 @@
 
 
 #include "Core/ObjectReference.hpp" 
+#include "Editor/PropertyField.hpp"
+#include <imgui/imgui_internal.h>
 
 const ImVec2 size = ImVec2(300, 800);
 
-void Draw(void* test)
-{
 
+
+std::unordered_map<std::string, PropertyField*>& InspectorView::customPropertiesMap()
+{
+    static std::unordered_map<std::string, PropertyField*> customDrawers;
+    return customDrawers;
+}
+
+void InspectorView::RegisterCustomPropertyDrawer(std::string type, PropertyField* propertyDrawer)
+{
+    std::cout << "Registered Custom Property Drawer:" << type << std::endl;
+    customPropertiesMap().emplace(type, propertyDrawer);
 }
 
 void InspectorView::OnDrawGUI()
 {
-    auto a = &Draw;
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    if (ImGui::BeginMenuBar())
+    {
+        if(ImGui::Button(locked ? "LOCKED" : "UNLOCKED"))
+        {
+            std::cout << locked << std::endl;
+            locked = !locked;
+        }
+            
+        //ImGui::MenuItem(locked ? "LOCK" : "UNLOCK", NULL, &locked);
+        ImGui::EndMenuBar();
+    }
+    // ImGui::SameLine();
+
+
+    // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     if (this->selected.Exists())
     {
@@ -34,13 +58,14 @@ void InspectorView::OnDrawGUI()
             this->selected.SetName(this->selectedEntityName);
         }
 
-
-
         std::vector<SObject*> properties;
         for (auto comp : this->selected.GetAllComponents())
         {
             ObjectReference <Component> ref(comp);
             std::string s = std::string(ComponentSystem::Get()->GetName(ref->m_ComponentType)) + "##" + std::to_string(ref->m_instanceID);
+
+            if(navigate_to.find(s.c_str()) != std::string::npos)
+                ImGui::SetNextItemOpen(true);
 
             if (ImGui::CollapsingHeader(s.c_str(), ImGuiTreeNodeFlags_None))
             {
@@ -54,37 +79,25 @@ void InspectorView::OnDrawGUI()
 
                 ref->GetPropertiesLocal(properties);
 
-            // For each properties list (each class has it's own, even base/super classes)
+                // For each properties list (each class has it's own, even base/super classes)
                 for(auto p : properties)
                 {
+                    bool first = true;
                     // For each properties in ^^each list
                     for(auto p2 : p->properties)
                     {
+                        // Skip the first because it is the component name
+                        if (first)
+                        { first = false; continue; }
 
-
-                        p2.second.ImGuiDraw(p2.first + "##" + s, ref.Get());
-                        
-                        if (p2.second.type.find("ObjectReference") != std::string::npos && ImGui::BeginDragDropTarget())
+                        if(customPropertiesMap().count(p2.second.type))
                         {
-                            std::cout << "Dropped Component::";
-                            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAG_COMPONENT"))
-                            {
-                                ObjectReference<Component> dropped = *(ObjectReference <Component>*)payload->Data;
-
-                                std::cout << dropped->m_instanceID << " of " << dropped->GET_COMPONENT_NAME() << std::endl;
-                                //TODO: instead check for dropped is assignable from p2's type
-
-                                std::string cname = dropped->GET_COMPONENT_NAME();
-                                if(cname == p2.second.GetGenericType())
-                                {
-                                    ObjectReference<Component>* dest = (ObjectReference<Component>*)p2.second.GetPtr((char*)ref.Get());
-                                    *dest = dropped;
-                                }
-                            }
-                            ImGui::EndDragDropTarget();
+                            customPropertiesMap()[p2.second.type]->DrawField(p2.second.GetPtr(ref.Get()));
                         }
-
-                        
+                        else
+                        {
+                            p2.second.ImGuiDraw(p2.first + "##" + s, ref.Get(), this);
+                        }
                     }
                 }
 
@@ -121,6 +134,9 @@ void InspectorView::OnDrawGUI()
 
 void InspectorView::SelectEntity(Entity entity)
 {
+    if(locked && selected.id != 0)
+        return;
+
     Scene* scene = Scenes::Get(entity.scene);
     if(entity.GetName().length() == 0)
     {
@@ -131,3 +147,20 @@ void InspectorView::SelectEntity(Entity entity)
     this->selected = entity;
 }
 
+void InspectorView::OnObjectReferenceFind(ObjectReference<void> object, const std::string& find)
+{
+    if(object.m_location == ObjectLocation::SCENE && object.IsValid())
+    {
+        Entity entity = Scenes::GetEntityFromComponentInstance(object.m_id);
+        // GET THE ENTITY entity USING ObjectRerefence object's m_id
+        // SET THE INSPECTORS SELECTED OBJECT TO ENTITY
+        // SET THE INSPECTORS NAVIGATE_TO to the COMPONENT FIELD ON THAT ENTITY
+        this->selected = entity;
+        this->navigate_to = find;
+    }
+}
+
+ImGuiWindowFlags InspectorView::GetFlags()
+{
+    return ImGuiWindowFlags_MenuBar;
+}

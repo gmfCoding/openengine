@@ -10,7 +10,7 @@ void ViewSystem::DrawAllViews()
 {
     for (auto &&v : views)
     {
-        ImGui::Begin(v.second->m_title.c_str());
+        ImGui::Begin(v.second->m_title.c_str(), nullptr, v.second->GetFlags());
         v.second->OnDrawGUI();
         ImGui::End();
     }

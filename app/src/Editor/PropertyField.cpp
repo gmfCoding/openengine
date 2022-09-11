@@ -1,29 +1,17 @@
 #include "Editor/PropertyField.hpp"
-namespace std{
-class string;
+#include "Views/InspectorView.hpp"
 
-}
-
-template<>
-void PropertyField<int>::DrawField(int* data)
+PropertyField::PropertyField(const std::string& name) : type(name)
 {
 
 }
 
-template<>
-void PropertyField<float>::DrawField(float* data)
+PropertyField* PropertyField::Generate()
 {
-
+    return nullptr;
 }
 
-template<>
-void PropertyField<std::string>::DrawField(std::string* data)
+void PropertyField::Register(PropertyField* property)
 {
-
-}
-
-template<>
-void PropertyField<long>::DrawField(long* data)
-{
-
+    InspectorView::RegisterCustomPropertyDrawer(property->type, property);
 }

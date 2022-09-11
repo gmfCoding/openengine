@@ -10,7 +10,7 @@ CompID TransformComponent::CID;
 
 namespace
 {
-    Component::Registrar<TransformComponent> registrar(STRINGIFY0(TransformComponent), &TransformComponent::CID);
+    Component::Registrar<TransformComponent> registrar(STRINGIFY0(TransformComponent));
 }
 
 TransformComponent::TransformComponent() : x(0), y(0), z(0), Component(CID) { m_ComponentType = CID; }

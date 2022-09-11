@@ -13,6 +13,9 @@
 #include <iostream>
 #endif
 
+#include <unordered_map>
+
+
 #include <list>
 
 #include "Core/Types.hpp"
@@ -74,6 +77,7 @@ class Scene
     ObjectSystem system;
 
     std::unordered_map<EntityID, std::vector<CommonID>> entityComponents;
+    std::unordered_map<CommonID, EntityID> componentToEntity;
     std::unordered_set<CommonID> activeComponents;
 
     public:
@@ -85,7 +89,7 @@ class Scene
     static std::unordered_map<EntityID, std::string> entityNames;
 
 public:
-
+ 
     Scene();
     
     std::string GetEntityName(Entity entity);
@@ -95,6 +99,9 @@ public:
     template<typename T>
     ObjectReference<T> GetComponent(Entity entity);
 
+    template <typename T>
+    std::enable_if_t<std::is_base_of<Component, T>::value, ObjectReference<T>> GetComponent(Entity entity);
+
     template<typename T>
     std::vector<ObjectReference<T>> GetComponents(Entity entity);
 
@@ -102,23 +109,25 @@ public:
 
     template<typename T>
     ObjectReference<T> AddComponent(Entity entity);
-
     ObjectReference<Component> AddComponent(Entity entity, CompID cid);
 
     template<typename T>
     void RemoveComponent(Entity entity);
+
     template<typename T>
     void RemoveComponent(Entity entity, Component* component);
-    
-    template <typename T>
-    std::enable_if_t<std::is_base_of<Component, T>::value, ObjectReference<T>> GetComponent(Entity entity);
 
-    bool IsEntityAssigned(Entity entity);
+    EntityID GetEntityFromComponentInstance(CommonID component);
+
+
+
 
     Entity CreateEntity();
     Entity CreateEntity(std::string name);
     Entity CreateEntity(std::string name, Entity parent);
     Entity CreateEntity(Entity parent);
+
+    bool IsEntityAssigned(Entity entity);
 
     void SetParent(Entity parentEtre, Entity childEtre, int index = 0);
     void SetEntityIndex(Entity entity, int index);

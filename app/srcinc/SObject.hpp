@@ -8,6 +8,8 @@
 
 #ifndef OE_SPROPERTY_FIELD
 #define OE_SPROPERTY_FIELD
+class InspectorView;
+
 struct SPropertyField
 {
     std::string type;
@@ -16,7 +18,7 @@ struct SPropertyField
 
     SPropertyField(int pSize, const std::string &pType, int pOffset);
 
-    void ImGuiDraw(const std::string &name, void *obj);
+    void ImGuiDraw(const std::string& name, void* obj, InspectorView* inspector);
     void *GetPtr(void *obj);
 
     std::string GetGenericType();

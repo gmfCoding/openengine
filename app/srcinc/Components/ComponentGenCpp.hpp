@@ -17,7 +17,7 @@
 #define RegisterComponent2(type, base, ...) CompID type::CID;\
 namespace\
 {\
-    Component::Registrar<type> registrar(STRINGIFY0(type), &type::CID);\
+    Component::Registrar<type> registrar(STRINGIFY0(type));\
 }\
 type::type() : __VA_ARGS__ , base(CID) {\
     m_ComponentType = CID;\

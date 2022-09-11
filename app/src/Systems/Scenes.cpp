@@ -34,3 +34,15 @@ Scene* Scenes::Get(SceneID id)
 
     return nullptr;
 }
+
+Entity Scenes::GetEntityFromComponentInstance(CommonID comp)
+{
+    Entity id = {0,0};
+    for (auto &&i : scenes)
+    {
+        id = {i->GetEntityFromComponentInstance(comp), i->sceneID};
+        if(id.id != 0)
+            break;
+    }
+    return id;
+}

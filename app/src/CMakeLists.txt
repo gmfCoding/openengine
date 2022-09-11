@@ -28,6 +28,8 @@ Components/ComponentSystem.cpp
 Components/TransformComponent.cpp
 Components/MeshComponent.cpp
 Components/TestComponent.cpp
+Components/PlayerComponent.cpp
+Components/EnemyTurretAI.cpp
 Legacy/LegacyObject.cpp
 Core/Entity.cpp
 Core/Scene.cpp
@@ -35,6 +37,8 @@ Core/Object.cpp
 Editor/Editor.cpp
 Editor/EditorViewSetup.cpp
 Editor/SceneSerialisation.cpp
+Editor/PropertyField.cpp
+Editor/TestComponentPropertyDrawer.cpp
 Util/UUIDGen.cpp
 )
 

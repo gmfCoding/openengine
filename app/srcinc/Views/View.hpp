@@ -30,6 +30,8 @@ class View
     virtual void OnDrawGUI() = 0;
     void SetDirty(bool state);
     void AddToViewSystem();
+
+    virtual ImGuiWindowFlags GetFlags();
 };
 
 #endif

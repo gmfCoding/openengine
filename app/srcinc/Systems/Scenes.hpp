@@ -29,6 +29,8 @@ class Scenes
     static SceneID CreateScene();
 
     static Scene* Get(SceneID id);
+
+    static Entity GetEntityFromComponentInstance(CommonID comp);
 };
 
 #endif

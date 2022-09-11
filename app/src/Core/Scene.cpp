@@ -86,44 +86,13 @@ ObjectReference<Component> Scene::AddComponent(Entity entity, CompID cid)
         CommonID id = comp->m_instanceID;
         ObjectReference<Component> ref(id);
 
+        componentToEntity.emplace(id, entity.id);
         entityComponents[entity.id].push_back(id);
         if (ref->IsActiveComponent())
             activeComponents.emplace(id);
         return ref;
     }
     return ObjectReference<Component>(0);
-}
-
-template <typename T>
-void Scene::RemoveComponent(Entity entity)
-{
-    if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
-    {
-        for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
-        {
-            if ((ObjectReference<Component>(*it))->m_instanceID == T::CID)
-            {
-                entityComponents[entity.id].erase(it);
-                break;
-            }
-        }
-    }
-}
-
-template <typename T>
-void Scene::RemoveComponent(Entity entity, Component *component)
-{
-    if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
-    {
-        for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
-        {
-            if ((ObjectReference<Component>(*it).Get()) == component)
-            {
-                entityComponents[entity.id].erase(it);
-                break;
-            }
-        }
-    }
 }
 
 template <typename T>
@@ -140,6 +109,48 @@ std::enable_if_t<std::is_base_of<Component, T>::value, ObjectReference<T>> Scene
     }
 
     return ObjectReference<Component>(0);
+}
+
+template <typename T>
+void Scene::RemoveComponent(Entity entity)
+{
+    if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
+    {
+        for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
+        {
+            if ((ObjectReference<Component>(*it))->m_instanceID == T::CID)
+            {
+                componentToEntity.erase((ObjectReference<Component>(*it))->m_instanceID);
+                entityComponents[entity.id].erase(it);
+                break;
+            }
+        }
+    }
+}
+
+template <typename T>
+void Scene::RemoveComponent(Entity entity, Component *component)
+{
+
+    if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
+    {
+        for (auto it = entityComponents[entity.id].begin(); it != entityComponents[entity.id].end(); ++it)
+        {
+            if ((ObjectReference<Component>(*it).Get()) == component)
+            {
+                componentToEntity.erase((ObjectReference<Component>(*it))->m_instanceID);
+                entityComponents[entity.id].erase(it);
+                break;
+            }
+        }
+    }
+}
+
+EntityID Scene::GetEntityFromComponentInstance(CommonID component)
+{
+    if(componentToEntity.count(component) > 0)
+        return componentToEntity[component];
+    return 0;
 }
 
 /*
@@ -288,6 +299,8 @@ void Scene::DeleteHierarchy(EntityHierarchyNode* e, DeletionOrigin delctx)
 
     DeleteEntityFromHierarchy(Entity {e->m_id, sceneID});
 }
+
+
 
 /*
 * Creates an entity in this scene.

@@ -60,15 +60,15 @@ class Component
     template <typename D>
     struct Registrar
     {
-        explicit Registrar(std::string const & name, CompID* cid)
+        explicit Registrar(std::string const & name)
         {
             ComponentInfo* ci = new ComponentInfo();
             ci->creator = &D::create;
             ci->name = name;
             ci->hash = Hashing::cid_const_hash(name.c_str());
             Component::registrate(name, ci);
-            *cid = ComponentSystem::Get()->Register(name, "");
-            std::cout << "Registrar:" << name << *cid;
+            D::CID = ComponentSystem::Get()->Register(name, "");
+            std::cout << "Registrar:" << name << D::CID;
         }
     };
 

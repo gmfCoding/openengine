@@ -16,6 +16,15 @@
 #include <glm/glm.hpp>
 #include "gmfc_image.hpp"
 
+#include "Editor/PropertyField.hpp"
+class TestComponentPropertyDrawer : public PropertyField
+{
+    public:
+    TestComponentPropertyDrawer(const std::string& name);
+    virtual void DrawField(void* data);
+    static PropertyField* Generate();
+};
+
 Editor* Editor::instance;
 
 void cursorpos_callback(GLFWwindow* window, double x, double y)

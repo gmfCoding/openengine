@@ -17,3 +17,8 @@ void View::AddToViewSystem()
 {
     this->owner->AddView(this);
 }
+
+ImGuiWindowFlags View::GetFlags()
+{
+    return ImGuiWindowFlags_None;
+}
