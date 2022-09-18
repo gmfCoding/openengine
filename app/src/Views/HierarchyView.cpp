@@ -8,17 +8,15 @@
 #include "imgui/imgui_internal.h"
 
 const ImVec2 size = ImVec2(300, 800);
-InspectorView *iv;
 
 ImRect hierarchyTreeRect;
 
 void HierarchyView::OnDrawGUI()
 {
-    iv = (InspectorView *)this->owner->GetView("Inspector");
     if (ImGui::Button("Add Object"))
     {
         Entity e = Editor::Get()->defaultScene->CreateEntity();
-        iv->SelectEntity(e);
+        InspectorView::SetAllSelectedEntity(e);
     }
 
     if (ImGui::ListBoxHeader("Entities:", size))
@@ -127,7 +125,8 @@ void HierarchyView::ImGui_RecurseDrawHeirarchy(EntityHierarchyNode *node, Scene 
     if (ImGui::IsItemClicked())
     {
         std::cout << "Selected:" << e.GetName() << std::endl;
-        iv->SelectEntity(e);
+
+        InspectorView::SetAllSelectedEntity(e);
         this->selected = e;
     }
 

@@ -13,12 +13,12 @@ set(GLFW_HEADERS ${CMAKE_SOURCE_DIR}/app/vendor/glfw)
 
 add_subdirectory(app/vendor/glfw-3.3.7)
 
-
+ 
 add_subdirectory(app/vendor/imgui)
 add_subdirectory(app/vendor/glad)
 add_subdirectory(app/vendor/other)
 
-add_definitions(-DOE_SRC_USE_PCH)
+# add_definitions(-DOE_SRC_USE_PCH)
 # Populates SOURCES with the src files defined in app/src/CMakeLists.txt 
 add_subdirectory(app/src)
 

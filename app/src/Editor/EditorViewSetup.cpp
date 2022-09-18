@@ -8,4 +8,5 @@ void Editor::SetupDefaultViews()
 {
     (new HierarchyView(this->viewSystem, "Hierarchy"))->AddToViewSystem();
     (new InspectorView(this->viewSystem, "Inspector"))->AddToViewSystem();
+    (new InspectorView(this->viewSystem, "Inspector2"))->AddToViewSystem();
 }

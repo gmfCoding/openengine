@@ -28,8 +28,8 @@ class View
     View(ViewSystem* pOwner, const std::string& name);
 
     virtual void OnDrawGUI() = 0;
+    virtual void AddToViewSystem();
     void SetDirty(bool state);
-    void AddToViewSystem();
 
     virtual ImGuiWindowFlags GetFlags();
 };

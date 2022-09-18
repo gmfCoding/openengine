@@ -1,18 +1,54 @@
 #include "Views/InspectorView.hpp"
 #include "Systems/Scenes.hpp"
-#include "Editor.hpp"
-#include "Components/Component.hpp"
-#include "Components/TestComponent.hpp"
-#include <string>
-
 
 #include "Core/ObjectReference.hpp" 
+
+#include "Components/Component.hpp"
+#include "Components/TestComponent.hpp"
+
+#include "Editor.hpp"
 #include "Editor/PropertyField.hpp"
+
+#include <string>
+#include <unordered_set>
+
 #include <imgui/imgui_internal.h>
+#include <imgui_stdlib.hpp>
+
+
+const ImGuiTableFlags table_flags =
+        ImGuiTableFlags_BordersInnerV |
+        // ImGuiTableFlags_BordersInnerH |
+        ImGuiTableFlags_Resizable |
+        ImGuiTableFlags_RowBg;
 
 const ImVec2 size = ImVec2(300, 800);
 
+std::vector<InspectorView*> InspectorView::inspectors;
 
+std::unordered_map<EntityID, std::unordered_set<InspectorView*>> InspectorView::inspectorEntities;
+std::unordered_map<EntityID, std::string>  InspectorView::selectedEntityNames;
+
+std::vector<InspectorView*> InspectorView::GetInspectors(bool includeLocked)
+{
+    std::vector<InspectorView*> l_inspectors;
+    for (auto i : inspectors)
+    {
+        if(i->locked == false || includeLocked)
+            l_inspectors.push_back(i);
+    }
+    return l_inspectors;
+}
+
+
+void InspectorView::SetAllSelectedEntity(Entity entity)
+{
+    for (auto i : inspectors)
+    {
+        if(i->locked == false)
+            i->SelectEntity(entity);
+    }
+}
 
 std::unordered_map<std::string, PropertyField*>& InspectorView::customPropertiesMap()
 {
@@ -35,8 +71,7 @@ void InspectorView::OnDrawGUI()
             std::cout << locked << std::endl;
             locked = !locked;
         }
-            
-        //ImGui::MenuItem(locked ? "LOCK" : "UNLOCK", NULL, &locked);
+
         ImGui::EndMenuBar();
     }
     // ImGui::SameLine();
@@ -48,16 +83,19 @@ void InspectorView::OnDrawGUI()
     {
         if(this->selected.GetName().length() == 0)
             return;
-
-        ImGui::Text("Name:");
+            
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextUnformatted("Name");
         ImGui::SameLine();
-        if(ImGui::InputText("##Name:", this->selectedEntityName.data(), ImGuiInputTextFlags_EnterReturnsTrue ))
-        {
-            if(this->selectedEntityName[0] == '\0')
-                this->selectedEntityName = "Entity";
-            this->selected.SetName(this->selectedEntityName);
-        }
+        ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+        ImGui::SameLine();
 
+        if(ImGui::InputText("##Name:", &this->selectedEntityNames[this->selected.id], ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            if(this->selectedEntityNames[this->selected.id][0] == '\0')
+                this->selectedEntityNames[this->selected.id] = "Entity";
+            this->selected.SetName(this->selectedEntityNames[this->selected.id]);
+        }
         std::vector<SObject*> properties;
         for (auto comp : this->selected.GetAllComponents())
         {
@@ -105,6 +143,7 @@ void InspectorView::OnDrawGUI()
             }
         }
 
+        ImGui::Separator();
         if (ImGui::Button("Add Component"))
             ImGui::OpenPopup("my_component_popup");
         if (ImGui::BeginPopup("my_component_popup", ImGuiWindowFlags_MenuBar))
@@ -131,20 +170,38 @@ void InspectorView::OnDrawGUI()
 }
 
 
+void InspectorView::AddToViewSystem()
+{
+    View::AddToViewSystem();
+    inspectors.push_back(this);
+}
 
 void InspectorView::SelectEntity(Entity entity)
 {
     if(locked && selected.id != 0)
         return;
 
+
+    Entity previous = this->selected;
     Scene* scene = Scenes::Get(entity.scene);
     if(entity.GetName().length() == 0)
     {
-        this->selectedEntityName = "Entity";
-        entity.SetName(this->selectedEntityName);
+        this->selectedEntityNames[entity.id] = "Entity";
+        entity.SetName(this->selectedEntityNames[entity.id]);
     }
-    this->selectedEntityName = std::string(entity.GetName());
+
+    if(inspectorEntities.count(entity.id) == 0)
+    {
+        std::unordered_set<InspectorView*> inspectors;
+        inspectorEntities.emplace(entity.id, inspectors);
+    }
+
+    if(previous.Exists())
+        inspectorEntities[previous.id].erase(this);
+
+    this->selectedEntityNames[entity.id] = std::string(entity.GetName());
     this->selected = entity;
+    inspectorEntities[entity.id].emplace(this);
 }
 
 void InspectorView::OnObjectReferenceFind(ObjectReference<void> object, const std::string& find)
