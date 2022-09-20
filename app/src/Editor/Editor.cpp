@@ -16,6 +16,14 @@
 #include <glm/glm.hpp>
 #include "gmfc_image.hpp"
 
+
+#include "Editor/SceneSerialisation.hpp"
+
+#include "Core/ObjectReference.hpp"
+#include "Core/Object.hpp"
+#include "Components/PlayerComponent.hpp"
+#include "Components/EnemyTurretAI.hpp"
+
 #include "Editor/PropertyField.hpp"
 class TestComponentPropertyDrawer : public PropertyField
 {
@@ -112,6 +120,21 @@ int Editor::OnInitialise()
     
     targetFPS = 144;
 
+
+
+    five.SetName("Player");
+    auto fo = five.AddComponent(PlayerComponent::CID);
+    auto fiveone = *(ObjectReference<PlayerComponent>*)&(fo);
+    fiveone->name = "Frank";
+
+    six.SetName("AlienTurret");
+    auto so = six.AddComponent(EnemyTurretAI::CID);
+    auto sixone = *(ObjectReference<EnemyTurretAI>*)&(so);
+    sixone->target_to_shoot = fiveone;
+
+
+    SceneSerialisation saver = SceneSerialisation();
+    saver.Save(*(this->defaultScene));
     SetupDefaultViews();
 
     return 0;

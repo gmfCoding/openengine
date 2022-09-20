@@ -24,6 +24,7 @@
 #include "Core/ObjectReference.hpp"
 #include "Systems/ObjectSystem.hpp"
 
+#include "Components/Component.hpp"
 
 
 class Component;
@@ -99,8 +100,25 @@ public:
     template <typename T>
     std::enable_if_t<std::is_base_of<Component, T>::value, ObjectReference<T>> GetComponent(Entity entity);
 
-    template<typename T>
-    std::vector<ObjectReference<T>> GetComponents(Entity entity);
+    template <typename T>
+    std::vector<ObjectReference<T>> GetComponents(Entity entity)
+    {
+        std::vector<ObjectReference<T>> comps = std::vector<ObjectReference<T>>();
+        if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
+        {
+            
+            for (auto i : entityComponents[entity.id])
+            {
+                ObjectReference<T> ref = {i, ObjectLocation::SCENE};
+                if (ref->m_ComponentType == T::CID || T::CID == Component::CID)
+                {
+                    comps.push_back(ref);
+                }
+            }
+        }
+
+        return comps;
+    }
 
     std::vector<CommonID> GetAllComponents(Entity entity);
 

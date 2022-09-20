@@ -42,26 +42,6 @@ ObjectReference<T> Scene::GetComponent(Entity entity)
     return nullptr;
 }
 
-template <typename T>
-std::vector<ObjectReference<T>> Scene::GetComponents(Entity entity)
-{
-    std::vector<ObjectReference<T>> comps = std::vector<ObjectReference<T>>();
-    if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
-    {
-        
-        for (auto i : entityComponents[entity.id])
-        {
-            ObjectReference<T> ref = {i, ObjectLocation::SCENE};
-            if (ref->CID == T::CID)
-            {
-                comps.push_back(ref);
-            }
-        }
-    }
-
-    return comps;
-}
-
 std::vector<CommonID> Scene::GetAllComponents(Entity entity)
 {
     if (IsEntityAssigned(entity) && entityComponents.count(entity.id))
